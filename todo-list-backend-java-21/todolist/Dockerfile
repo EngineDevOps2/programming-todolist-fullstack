@@ -21,7 +21,7 @@ RUN ./gradlew build
 FROM openjdk:21-jdk-slim  
 WORKDIR /app  
 #RUN ls -l /app/build/libs/
-COPY --from=build /app/build/libs/*.jar app.jar  
+COPY --from=build /app/build/libs/todolist-0.0.1-SNAPSHOT.jar app.jar  
 # If using Maven  
 # COPY --from=build /app/target/*.jar app.jar  
 
