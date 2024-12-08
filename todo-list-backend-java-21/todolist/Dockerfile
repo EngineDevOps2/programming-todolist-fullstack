@@ -20,7 +20,8 @@ RUN ./gradlew build
 # Create a new image for the runtime  
 FROM openjdk:21-jdk-slim  
 WORKDIR /app  
-COPY --from=build /app/build/libs/*.jar app.jar  
+RUN ls -l /app/build/libs/
+COPY --from=build /app/build/libs/*.jar /app/app.jar  
 # If using Maven  
 # COPY --from=build /app/target/*.jar app.jar  
 
