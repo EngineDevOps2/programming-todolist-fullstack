@@ -24,7 +24,7 @@ const App = () => {
 
   const fetchTodos = async () => {  
     try {  
-      const response = await axios.get('http://34.42.107.218:32700//api/todos');
+      const response = await axios.get('http://34.42.107.218:32700/api/todos');
        
       console.log(response.data);  
       setTodos(response.data);  
