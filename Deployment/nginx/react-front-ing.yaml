@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1  
+kind: Ingress  
+metadata:  
+  name: react-front-ing 
+  namespace: prod
+spec:  
+  ingressClassName:  nginx
+  rules:  
+    - host: enginedevops.ir
+      http:  
+        paths:  
+          - path: /  
+            pathType: Prefix  
+            backend:  
+              service:  
+                name: react-front 
+                port:  
+                  number: 3000
+          - path: /api/todos  
+            pathType: Prefix  
+            backend:  
+              service:  
+                name: java-spring 
+                port:  
+                  number: 8080

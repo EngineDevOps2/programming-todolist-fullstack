@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-front
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-front
+  template:
+    metadata:
+      labels:
+        app: react-front
+    spec:
+      containers:
+        - name: react-front
+          image: 587719063165.dkr.ecr.us-west-2.amazonaws.com/react-front:23a3bbc3
+          imagePullPolicy: "Always"
+          ports:
+          - name: http
+            containerPort: 3000
+            protocol: TCP
+#          livenessProbe:
+#            periodSeconds: 10
+#            initialDelaySeconds: 15
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#          readinessProbe:
+#            periodSeconds: 10
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#            initialDelaySeconds: 15
+#          envFrom:
+#            - configMapRef:
+#                name: java-config
+#          volumeMounts:
+#            - mountPath: /home/app/api/media
+#              name: react-front-media
+#      volumes:
+#        - name: react-front-media
+#          hostPath:
+#            path: /home/leyla/media-react-front-worker-2
+

@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-spring
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-spring
+  template:
+    metadata:
+      labels:
+        app: java-spring
+    spec:
+      containers:
+        - name: java-spring
+          image: 587719063165.dkr.ecr.us-west-2.amazonaws.com/java-spring:23a3bbc3
+          imagePullPolicy: "Always"
+          ports:
+          - name: http
+            containerPort: 8088
+            protocol: TCP
+#          livenessProbe:
+#            periodSeconds: 10
+#            initialDelaySeconds: 15
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#          readinessProbe:
+#            periodSeconds: 10
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#            initialDelaySeconds: 15
+          envFrom:
+            - configMapRef:
+                name: java-config
+#          volumeMounts:
+#            - mountPath: /home/app/api/media
+#              name: java-spring-media
+#      volumes:
+#        - name: java-spring-media
+#          hostPath:
+#            path: /home/leyla/media-java-spring-worker-2
+

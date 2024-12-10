@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-todolist-chrome
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: react-todolist-chrome
+  template:
+    metadata:
+      labels:
+        app: react-todolist-chrome
+    spec:
+      containers:
+      - name: react-todolist-chrome
+        image: react-todolist-chrome:1.1
