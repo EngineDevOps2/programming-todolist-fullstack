@@ -6,7 +6,7 @@ metadata:
   labels:
     app: java-spring
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
    - port: 8080
   selector:
