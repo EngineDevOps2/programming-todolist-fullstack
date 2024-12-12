@@ -13,19 +13,19 @@ COPY . ./
 # COPY src ./src  
 
 # Download dependencies and build the application  
-RUN ./gradlew build 
+# RUN ./gradlew build 
 # If using Maven  
 # RUN mvn clean package  
-
+RUN gradle shadowJar   --no-daemon
 # Create a new image for the runtime  
-FROM openjdk:21-jdk-slim  
-WORKDIR /app  
-#RUN ls -l /app/build/libs/
-COPY --from=build /app/build/libs/todolist-0.0.1-SNAPSHOT.jar app.jar  
-# If using Maven  
-# COPY --from=build /app/target/*.jar app.jar  
+# FROM openjdk:21-jdk-slim   
+# WORKDIR /app  
+# #RUN ls -l /app/build/libs/
+# COPY --from=build /app/build/libs/todolist-0.0.1-SNAPSHOT.jar app.jar  
+# # If using Maven  
+# # COPY --from=build /app/target/*.jar app.jar  
 
-# Expose port 8080  
+# # Expose port 8080  
 EXPOSE 8080  
 
 # Run the application  
