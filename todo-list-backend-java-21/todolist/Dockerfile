@@ -18,10 +18,10 @@ COPY . ./
 # RUN mvn clean package  
 RUN gradle build  --no-daemon
 # Create a new image for the runtime  
-FROM amd64/gradle:8.11-jdk21   
- WORKDIR /app  
-# #RUN ls -l /app/build/libs/
-COPY --from=build /app/build/libs/todolist-0.0.1-SNAPSHOT.jar app.jar  
+# FROM amd64/gradle:8.11-jdk21   
+#  WORKDIR /app  
+# # #RUN ls -l /app/build/libs/
+# COPY --from=build /app/build/libs/todolist-0.0.1-SNAPSHOT.jar app.jar  
 # # If using Maven  
 # # COPY --from=build /app/target/*.jar app.jar  
 
@@ -31,4 +31,4 @@ EXPOSE 8080
 # Run the application  
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-CMD  gradle flywayMigrate --stacktrace --no-daemon &&  java -jar app.jar
+CMD  gradle flywayMigrate --stacktrace --no-daemon &&  java -jar /app/build/libs/todolist-0.0.1-SNAPSHOT.jar
