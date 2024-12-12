@@ -38,11 +38,11 @@ dependencies {
 flyway {  
 	baselineOnMigrate = true  
     baselineVersion = '1' 
-    url = ${SPRING_DATASOURCE_URL}
-    user = ${SPRING_DATASOURCE_USERNAME}
-    password = ${SPRING_DATASOURCE_PASSWORD}
-    // url = "jdbc:postgresql://localhost:5432/todolist"
-    // user = "leyla"
-    // password = "123456"
+    // url = ${SPRING_DATASOURCE_URL}
+    // user = ${SPRING_DATASOURCE_USERNAME}
+    // password = ${SPRING_DATASOURCE_PASSWORD}
+    url = "jdbc:postgresql://db:5432/todolist"
+    user = "leyla"
+    password = "123456"
     locations = ['classpath:db/migration']  
 }
