@@ -31,4 +31,6 @@ EXPOSE 8080
 # Run the application  
 # ENTRYPOINT ["java", "-jar", "app.jar"]
 
-CMD  gradle flywayMigrate --stacktrace --no-daemon &&  java -jar /app/build/libs/todolist-0.0.1-SNAPSHOT.jar
+#CMD  gradle flywayMigrate --stacktrace --no-daemon &&  java -jar /app/build/libs/todolist-0.0.1-SNAPSHOT.jar
+CMD   java -jar /app/build/libs/todolist-0.0.1-SNAPSHOT.jar
+
