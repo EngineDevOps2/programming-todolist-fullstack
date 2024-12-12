@@ -1,6 +1,6 @@
 ##### Use the official OpenJDK base image  
 # FROM openjdk:21-jdk-slim AS build  
-FROM amd64/gradle:8.11-jdk21
+FROM amd64/gradle:8.11-jdk21 AS build
 # Set the working directory  
 WORKDIR /app  
 
