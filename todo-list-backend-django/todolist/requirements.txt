@@ -1,0 +1,4 @@
+Django>=4.0,<5.0  # Core framework  
+djangorestframework  # For creating REST APIs  
+psycopg2-binary  # PostgreSQL database adapter for Python  
+gunicorn  # WSGI HTTP server for UNIX  
