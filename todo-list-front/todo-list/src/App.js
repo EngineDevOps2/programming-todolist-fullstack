@@ -24,7 +24,7 @@ const App = () => {
 
   const fetchTodos = async () => {  
     try {  
-      const response = await axios.get('https://enginedevops.ir/api/todos/');
+      const response = await axios.get('https://enginedevops.ir/api/todos');
        
       console.log(response.data);  
       setTodos(response.data);  
@@ -36,7 +36,7 @@ const App = () => {
   const addTodo = async (todoText) => {  
     try {  
       console.log("777777777777777",todoText)
-      const response = await axios.post('https://enginedevops.ir/api/todos/', { title: todoText }, {  
+      const response = await axios.post('https://enginedevops.ir/api/todos', { title: todoText }, {  
     headers: {  
         'Content-Type': 'application/json'  
     },
@@ -53,7 +53,7 @@ const App = () => {
 
   const editTodo = async (id, newText) => {  
         try {  
-      const response = await axios.put(`https://enginedevops.ir/api/todos/${id}/`, { title: newText });  
+      const response = await axios.put(`https://enginedevops.ir/api/todos/${id}`, { title: newText });  
       setTodos(todos.map(todo => (todo.id === id ? response.data : todo))); 
       console.log("Edited ..... item .....",newText) 
     } catch (error) {  
@@ -63,7 +63,7 @@ const App = () => {
 
   const removeTodo = async (id) => {  
         try {  
-      await axios.delete(`https://enginedevops.ir/api/todos/${id}/`);  
+      await axios.delete(`https://enginedevops.ir/api/todos/${id}`);  
       setTodos(todos.filter(todo => todo.id !== id));  
       console.log("remove Item ....",id)
     } catch (error) {  
