@@ -4,15 +4,15 @@ FROM php:8.4-fpm
 WORKDIR /app
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y 
-    git 
-    curl 
-    libpq-dev 
-    libpng-dev 
-    libonig-dev 
-    libxml2-dev 
-    zip 
-    unzip && 
+RUN apt-get update && apt-get install -y  \
+    git \
+    curl  \
+    libpq-dev \ 
+    libpng-dev \ 
+    libonig-dev  \
+    libxml2-dev  \
+    zip  \
+    unzip &&  \ 
     docker-php-ext-install pdo pdo_pgsql
 
 # Clear cache
