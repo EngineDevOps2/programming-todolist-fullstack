@@ -25,7 +25,10 @@ SECRET_KEY = "django-insecure-3t&bnhwi)=jjc5&1jhdxr(63so#oryz*=yfcmmi_nv!vqd50kw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 APPEND_SLASH = False  
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'https://enginedevops.ir',
+]
 REST_FRAMEWORK = {  
     'COERCE_DECIMAL_TO_STRING': False,  
     'DEFAULT_PARSER_CLASSES': [  
