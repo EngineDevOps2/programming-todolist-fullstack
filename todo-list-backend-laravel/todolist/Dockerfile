@@ -25,7 +25,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 COPY . ./
 
 # Install Composer dependencies
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+RUN composer install
 
 # Run migrations and start the server
 ENTRYPOINT ["sh", "-c", "php artisan migrate && php artisan serve --port=8000 --host=0.0.0.0"]
