@@ -28,4 +28,4 @@ COPY . ./
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Run migrations and start the server
-ENTRYPOINT ["sh", "-c", "php artisan migrate && exec php artisan serve --port=8000 --host=0.0.0.0"]
+ENTRYPOINT ["sh", "-c", "php artisan migrate && php artisan serve --port=8000 --host=0.0.0.0"]
