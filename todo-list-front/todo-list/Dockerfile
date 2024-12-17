@@ -1,4 +1,4 @@
-# Use Node.js for building the React app  
+##### Use Node.js for building the React app  
 FROM node:20 AS build  
 
 # Set the working directory  
@@ -14,7 +14,7 @@ RUN npm install
 COPY . .  
 
 # Build the React application  
-RUN npm run build  
+#RUN npm run build  
 
 # Use Nginx to serve the React app  
 # FROM nginx:alpine  
