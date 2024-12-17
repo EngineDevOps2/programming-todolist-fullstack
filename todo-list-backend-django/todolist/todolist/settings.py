@@ -27,7 +27,8 @@ DEBUG = True
 APPEND_SLASH = False  
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'https://enginedevops.ir',
+    'localhost',
+    '.enginedevops.ir',
 ]
 REST_FRAMEWORK = {  
     'COERCE_DECIMAL_TO_STRING': False,  
