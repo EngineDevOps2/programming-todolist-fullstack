@@ -1,16 +1,16 @@
 <?php  
 
-namespace App\Http\Controllers;  
+namespace AppHttpControllers;  
 
-use App\Models\Todo;  
-use Illuminate\Http\Request;  
+use AppModelsTodo;  
+use IlluminateHttpRequest;  
 
 class TodoController extends Controller  
 {  
     // Get all todos  
     public function index()  
     {  
-        return Todo::all();  
+        return response()->json(Todo::all(), 200);  
     }  
 
     // Store a new todo  
@@ -18,16 +18,18 @@ class TodoController extends Controller
     {  
         $request->validate([  
             'title' => 'required|string|max:255',  
-            'completed' => 'nullable|string',  
+            'completed' => 'nullable|boolean',  
         ]);  
 
-        return Todo::create($request->all());  
+        $todo = Todo::create($request->all());  
+        return response()->json($todo, 201);  
     }  
 
     // Show a specific todo  
     public function show($id)  
     {  
-        return Todo::findOrFail($id);  
+        $todo = Todo::findOrFail($id);  
+        return response()->json($todo, 200);  
     }  
 
     // Update a todo  
@@ -36,11 +38,11 @@ class TodoController extends Controller
         $todo = Todo::findOrFail($id);  
         $request->validate([  
             'title' => 'sometimes|required|string|max:255',  
-            'completed' => 'nullable|string',  
+            'completed' => 'nullable|boolean',  
         ]);  
 
         $todo->update($request->all());  
-        return $todo;  
+        return response()->json($todo, 200);  
     }  
 
     // Delete a todo  
