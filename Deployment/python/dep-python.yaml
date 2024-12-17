@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-django
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-django
+  template:
+    metadata:
+      labels:
+        app: python-django
+    spec:
+      containers:
+        - name: python-django
+          image: 587719063165.dkr.ecr.us-west-2.amazonaws.com/python-django:23a3bbc3
+          imagePullPolicy: "Always"
+          ports:
+          - name: http
+            containerPort: 8000
+            protocol: TCP
+#          livenessProbe:
+#            periodSeconds: 10
+#            initialDelaySeconds: 15
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#          readinessProbe:
+#            periodSeconds: 10
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#            initialDelaySeconds: 15
+          envFrom:
+            - configMapRef:
+                name: python-config
+#          volumeMounts:
+#            - mountPath: /home/app/api/media
+#              name: python-django-media
+#      volumes:
+#        - name: python-django-media
+#          hostPath:
+#            path: /home/leyla/media-python-django-worker-2
+
