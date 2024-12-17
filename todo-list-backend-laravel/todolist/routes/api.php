@@ -1,8 +1,8 @@
 <?php
 use App\Http\Controllers\TodoController;  
 
-Route::get('/todos', [TodoController::class, 'index']);  
-Route::post('/todos', [TodoController::class, 'store']);  
-Route::get('/todos/{id}', [TodoController::class, 'show']);  
-Route::put('/todos/{id}', [TodoController::class, 'update']);  
-Route::delete('/todos/{id}', [TodoController::class, 'destroy']);
+Route::get('/api/todos', [TodoController::class, 'index']);  
+Route::post('/api/todos', [TodoController::class, 'store']);  
+Route::get('/api/todos/{id}', [TodoController::class, 'show']);  
+Route::put('/api/todos/{id}', [TodoController::class, 'update']);  
+Route::delete('/api/todos/{id}', [TodoController::class, 'destroy']);
