@@ -27,6 +27,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 COPY . ./
 #RUN chown -R www-data: /app
-#USER $user
+
 
 #CMD php artisan serve --port=8000 --host=0.0.0.0
+ENTRYPOINT ["sh", "-c", "php artisan migrate && exec php artisan serve --port=8000 --host=0.0.0.0"]  
