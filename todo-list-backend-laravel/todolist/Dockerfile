@@ -53,7 +53,7 @@ WORKDIR /var/www/html
 
 # Install composer and Laravel dependencies with composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
-    && composer install --no-dev --optimize-autoloader
+    && composer install  --optimize-autoloader
 
 # Expose port 80 for Apache
 EXPOSE 80
