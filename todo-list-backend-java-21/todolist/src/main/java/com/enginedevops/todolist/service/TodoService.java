@@ -19,28 +19,30 @@ public class TodoService {
     }
 
     public Todo createTodo(Todo todo) {  
-    if (todo.getTitle() == null || todo.getTitle().isEmpty()) {  
-        throw new IllegalArgumentException("Title cannot be null or empty");  
+        if (todo.getTitle() == null || todo.getTitle().isEmpty()) {  
+            throw new IllegalArgumentException("Title cannot be null or empty");  
+        }  
+        return todoRepository.save(todo);  
     }  
-    return todoRepository.save(todo);  
-}  
 
-public Todo updateTodo(Long id, Todo todoDetails) {  
-    Todo todo = todoRepository.findById(id).orElseThrow(() ->   
-        new RuntimeException("Todo not found with id: " + id)); // پیام خطای واضح‌تر  
-    if (todoDetails.getTitle() == null || todoDetails.getTitle().isEmpty()) {  
-        throw new IllegalArgumentException("Title cannot be null or empty");  
-    }  
-    todo.setTitle(todoDetails.getTitle());  
-    todo.setCompleted(todoDetails.isCompleted());  
-    return todoRepository.save(todo);  
-} 
+    public Todo updateTodo(Long id, Todo todoDetails) {  
+        Todo todo = todoRepository.findById(id);
+        if (todo == null) {
+            throw new RuntimeException("Todo not found with id: " + id);
+        }
+        if (todoDetails.getTitle() == null || todoDetails.getTitle().isEmpty()) {  
+            throw new IllegalArgumentException("Title cannot be null or empty");  
+        }
+
+ todo.setTitle(todoDetails.getTitle());  
+        todo.setCompleted(todoDetails.isCompleted());  
+        return todoRepository.save(todo);  
+    } 
     
-  
-public void deleteTodo(Long id) {  
-    if (!todoRepository.existsById(id)) {  
-        throw new RuntimeException("Todo not found with id: " + id);  
+    public void deleteTodo(Long id) {  
+        if (todoRepository.findById(id) == null) {  
+            throw new RuntimeException("Todo not found with id: " + id);  
+        }  
+        todoRepository.delete(id);  
     }  
-    todoRepository.deleteById(id);  
-}  
 }
