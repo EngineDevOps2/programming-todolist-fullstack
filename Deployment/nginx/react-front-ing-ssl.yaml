@@ -20,7 +20,7 @@ spec:
                 name: react-front   
                 port:  
                   number: 3000  
-          - path: /api/todos/  
+          - path: /api/todos  
             pathType: Prefix  
             backend:  
               service:  
