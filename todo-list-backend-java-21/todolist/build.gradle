@@ -2,7 +2,8 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id 'org.flywaydb.flyway' version '9.20.0'  // Add this line  
+	id 'org.flywaydb.flyway' version '9.20.0'  
+	id 'nu.studer.jooq' version '9.0'  
 
 }
 
@@ -24,10 +25,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation 'org.flywaydb:flyway-core'
-        implementation 'org.flywaydb:flyway-database-postgresql'
-	runtimeOnly 'org.postgresql:postgresql'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.flywaydb:flyway-database-postgresql'
+	implementation 'org.jooq:jooq'  
+    implementation 'org.jooq:jooq-meta'  
+    implementation 'org.jooq:jooq-codegen'  
+    implementation 'org.postgresql:postgresql'
+    jooqGenerator 'org.postgresql:postgresql'
+
+
+//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 // tasks.named('test') {
@@ -38,11 +45,54 @@ dependencies {
 flyway {  
 	baselineOnMigrate = true  
     baselineVersion = '1' 
-    // url = ${SPRING_DATASOURCE_URL}
-    // user = ${SPRING_DATASOURCE_USERNAME}
-    // password = ${SPRING_DATASOURCE_PASSWORD}
-    url = "jdbc:postgresql://db:5432/todolist"
+
+    url = "jdbc:postgresql://localhost:5432/todolist"
     user = "leyla"
     password = "123456"
     locations = ['classpath:db/migration']  
+}
+
+jooq {  
+    version = '3.19.15'  // default (can be omitted)  
+    edition = nu.studer.gradle.jooq.JooqEdition.OSS  // default (can be omitted)  
+
+    configurations {  
+        main {  // name of the jOOQ configuration  
+            generateSchemaSourceOnCompilation = true  // default (can be omitted)  
+
+            generationTool {  
+                jdbc {  
+                    driver = 'org.postgresql.Driver'  
+                    url = 'jdbc:postgresql://localhost:5432/todolist'  
+                    user = 'leyla'  
+                    password = '123456'  
+                }  
+                generator {  
+                    name = 'org.jooq.codegen.DefaultGenerator'  
+                    database {  
+                        name = 'org.jooq.meta.postgres.PostgresDatabase'  
+                        inputSchema = 'public'  
+                    } 
+                    generate {
+                        deprecated = false
+                        records = true
+                        immutablePojos = true
+                        fluentSetters = true
+                    }
+                    target {  
+                        packageName = 'com.enginedevops.todolist.jooq.tables'
+                        directory = 'build/generated-src/jooq/main'  // default (can be omitted)  
+                    }  
+                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'  
+                }  
+            }  
+        }  
+    }  
+}
+sourceSets {
+    main {
+        java {
+            srcDirs += 'build/generated-src/jooq/main'
+        }
+    }
 }
