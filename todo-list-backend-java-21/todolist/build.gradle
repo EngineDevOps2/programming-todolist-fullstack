@@ -2,7 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
 	id 'io.spring.dependency-management' version '1.1.6'
-	id 'org.flywaydb.flyway' version '9.20.0'  
+	id 'org.flywaydb.flyway'  version '9.20.0'  
 	id 'nu.studer.jooq' version '9.0'  
 
 }
@@ -33,23 +33,23 @@ dependencies {
     jooqGenerator 'org.postgresql:postgresql'
 
 
-//	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-// tasks.named('test') {
-// 	useJUnitPlatform()
-// }
+
 
 
 flyway {  
-	baselineOnMigrate = true  
-    baselineVersion = '1' 
-
-    url = "jdbc:postgresql://localhost:5432/todolist"
+//    configurations = ['flywayMigration']
+//	baselineOnMigrate = true 
+//    baselineVersion = '1' 
+//    driver = 'org.postgresql.Driver' 
+    url = "jdbc:postgresql://db:5432/todolist"
     user = "leyla"
     password = "123456"
-    locations = ['classpath:db/migration']  
+    locations = ['classpath:db/migration'] 
+//    locations = ['classpath:db/migrations', 'filesystem:' + project.getProjectDir() + '/src/main/resources/migrations'] 
 }
 
 jooq {  
@@ -58,12 +58,12 @@ jooq {
 
     configurations {  
         main {  // name of the jOOQ configuration  
-            generateSchemaSourceOnCompilation = true  // default (can be omitted)  
+            generateSchemaSourceOnCompilation = true // default (can be omitted)  
 
             generationTool {  
                 jdbc {  
                     driver = 'org.postgresql.Driver'  
-                    url = 'jdbc:postgresql://localhost:5432/todolist'  
+                    url = 'jdbc:postgresql://db:5432/todolist'  
                     user = 'leyla'  
                     password = '123456'  
                 }  
@@ -74,10 +74,11 @@ jooq {
                         inputSchema = 'public'  
                     } 
                     generate {
-                        deprecated = false
-                        records = true
-                        immutablePojos = true
-                        fluentSetters = true
+                       deprecated = false
+                       records = true
+                       pojos = true 
+                       immutablePojos = true
+
                     }
                     target {  
                         packageName = 'com.enginedevops.todolist.jooq.tables'
@@ -89,10 +90,12 @@ jooq {
         }  
     }  
 }
-sourceSets {
-    main {
-        java {
-            srcDirs += 'build/generated-src/jooq/main'
-        }
-    }
-}
+//generateCsmartJooqSchemaSource.dependsOn flywayMigrate
+// sourceSets {
+//     main {
+//         java {
+//             srcDirs += 'build/generated-src/jooq/main'
+//         }
+//     }
+// }
+

@@ -30,6 +30,11 @@ public class TodoController {
     public List<Todo> getAllTodos() {
         return todoService.getAllTodos();
     }
+@GetMapping("/{id}")
+    public ResponseEntity<Todo> getTodoById(@PathVariable Integer id) {
+        Todo todo = todoService.getTodoById(id);
+        return ResponseEntity.ok(todo);
+    }
 
     @PostMapping
     public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
@@ -38,13 +43,13 @@ public class TodoController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todoDetails) {
+    public ResponseEntity<Todo> updateTodo(@PathVariable Integer id, @RequestBody Todo todoDetails) {
         Todo updatedTodo = todoService.updateTodo(id, todoDetails);
         return ResponseEntity.ok(updatedTodo);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTodo(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTodo(@PathVariable Integer id) {
         todoService.deleteTodo(id);
         return ResponseEntity.noContent().build();
     }

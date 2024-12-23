@@ -17,6 +17,13 @@ public class TodoService {
     public List<Todo> getAllTodos() {
         return todoRepository.findAll();
     }
+    public Todo getTodoById(Integer id) {
+        Todo todo = todoRepository.findById(id);
+        if (todo == null) {
+            throw new RuntimeException("Todo not found with id: " + id);
+        }
+        return todo;
+    }
 
     public Todo createTodo(Todo todo) {  
         if (todo.getTitle() == null || todo.getTitle().isEmpty()) {  
@@ -25,7 +32,7 @@ public class TodoService {
         return todoRepository.save(todo);  
     }  
 
-    public Todo updateTodo(Long id, Todo todoDetails) {  
+    public Todo updateTodo(Integer id, Todo todoDetails) {  
         Todo todo = todoRepository.findById(id);
         if (todo == null) {
             throw new RuntimeException("Todo not found with id: " + id);
@@ -39,7 +46,7 @@ public class TodoService {
         return todoRepository.save(todo);  
     } 
     
-    public void deleteTodo(Long id) {  
+    public void deleteTodo(Integer id) {  
         if (todoRepository.findById(id) == null) {  
             throw new RuntimeException("Todo not found with id: " + id);  
         }  

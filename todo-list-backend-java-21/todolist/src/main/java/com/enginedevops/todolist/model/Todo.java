@@ -9,41 +9,43 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name="TODOLIST")
 
-public class Todo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Todo {  
+    @Id  
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  
+    private Integer id;  
 
-    private String title;
-    private boolean completed;
-    private String status;
-    // Getters and Setters
+    private String title;  
+    private boolean completed;  
 
-    public Long getId() {
-        return id;
-    }
+     private String status; // New field added for status  
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    // Getters and Setters  
 
-    public String getTitle() {
-        return title;
-    }
+    public Integer getId() {  
+        return id;  
+    }  
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setId(Integer id) {  
+        this.id = id;  
+    }  
 
-    public boolean isCompleted() {
-        return completed;
-    }
+    public String getTitle() {  
+        return title;  
+    }  
 
-    public void setCompleted(boolean completed) {
-        this.completed = completed;
-    }
+    public void setTitle(String title) {  
+        this.title = title;  
+    }  
 
-        public String getStatus() {  
+    public boolean isCompleted() {  
+        return completed;  
+    }  
+
+    public void setCompleted(boolean completed) {  
+        this.completed = completed;  
+    }  
+
+    public String getStatus() {  
         return status;  
     }  
 
@@ -51,4 +53,3 @@ public class Todo {
         this.status = status;  
     }  
 }
-

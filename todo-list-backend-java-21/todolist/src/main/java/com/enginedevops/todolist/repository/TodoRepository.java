@@ -1,14 +1,14 @@
 package com.enginedevops.todolist.repository;
 
-import com.enginedevops.todolist.model.Todo;
+import java.util.List;
+
 import org.jooq.DSLContext;
 import org.jooq.Record;
 import org.jooq.Result;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-import static com.enginedevops.todolist.jooq.tables.Todolist.TODOLIST; 
+import static com.enginedevops.todolist.jooq.tables.tables.Todolist.TODOLIST;
+import com.enginedevops.todolist.model.Todo; 
 
 // Adjust this import based on your generated jOOQ classes
 
@@ -41,7 +41,7 @@ public class TodoRepository {
     public Todo save(Todo todo) {
         if (todo.getId() == null) {
             // Insert new Todo
-            Long id = dsl.insertInto(TODOLIST)
+            Integer id = dsl.insertInto(TODOLIST)
                     .set(TODOLIST.TITLE, todo.getTitle())
                     .set(TODOLIST.COMPLETED, todo.isCompleted())
                     .returning(TODOLIST.ID)
@@ -59,13 +59,13 @@ public class TodoRepository {
         return todo;
     }
 
-    public void delete(Long id) {
+    public void delete(Integer id) {
         dsl.deleteFrom(TODOLIST)
             .where(TODOLIST.ID.eq(id))
             .execute();
     }
 
-    public Todo findById(Long id) {
+    public Todo findById(Integer id) {
         Record record = dsl.select().from(TODOLIST).where(TODOLIST.ID.eq(id)).fetchOne();
         if (record != null) {
             Todo todo = new Todo();
