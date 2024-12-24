@@ -91,14 +91,14 @@ jooq {
         }  
     }  
 }
-//generateCsmartJooqSchemaSource.dependsOn flywayMigrate
-// sourceSets {
-//     main {
-//         java {
-//             srcDirs += 'build/generated-src/jooq/main'
-//         }
-//     }
-// }
+generateCsmartJooqSchemaSource.dependsOn flywayMigrate
+sourceSets {
+    main {
+        java {
+            srcDirs += 'build/generated-src/jooq/main'
+        }
+    }
+}
 
 shadowJar {
     mergeServiceFiles()
