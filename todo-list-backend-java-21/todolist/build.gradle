@@ -91,7 +91,7 @@ jooq {
         }  
     }  
 }
-generateCsmartJooqSchemaSource.dependsOn flywayMigrate
+//generateCsmartJooqSchemaSource.dependsOn flywayMigrate
 sourceSets {
     main {
         java {
