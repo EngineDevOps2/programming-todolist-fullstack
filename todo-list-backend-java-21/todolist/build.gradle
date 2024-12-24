@@ -99,3 +99,10 @@ jooq {
 //     }
 // }
 
+shadowJar {
+    mergeServiceFiles()
+    zip64 true
+    archiveBaseName.set('app')
+    archiveClassifier.set('')
+    archiveVersion.set('')
+}
