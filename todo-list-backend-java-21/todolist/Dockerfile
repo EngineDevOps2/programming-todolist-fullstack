@@ -2,7 +2,7 @@ FROM amd64/gradle:8.11-jdk21 AS build
 
 WORKDIR /app  
 
-COPY . /app 
+COPY . ./
 #RUN gradle shadowJar --no-daemon
 
 EXPOSE 8080  
