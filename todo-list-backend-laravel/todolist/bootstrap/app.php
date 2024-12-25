@@ -18,12 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
-            if ($request->is('api/*')) {
-                return response()->json([
-                    'status' => 'false',
-                    'message' => 'Route Not found',
-                ], 404);
-            }
-        });
+//        $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+            // if ($request->is('api/*')) {
+            //     return response()->json([
+            //         'status' => 'false',
+            //         'message' => 'Route Not found',
+            //     ], 404);
+            // }
+    //    });
     })->create();
