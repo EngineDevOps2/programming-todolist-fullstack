@@ -1,0 +1,68 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_IMAGE = 'enginedevops/react-jenkins'
+        K8S_DEPLOYMENT_NAME = 'react-front' // Kubernetes deployment name
+        NAMESPACE = 'prod'
+        DOCKER_USERNAME = 'enginedevops'
+        DOCKER_PASSWORD = 'xxxxxxxxxxxx'
+    }
+
+    stages {
+        stage('Checkout GitHub repo') {
+            steps {
+                cleanWs()
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/EngineDevOps2/programming-java-spring-react.git']])
+            }
+        }
+        
+        stage('Get Commit Hash') {
+            steps {
+                script {
+                    // دریافت commit hash
+                    env.COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                }
+            }
+        }
+
+        stage('Build and Tag Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE}:${env.COMMIT_HASH} todo-list-front/todo-list"
+                }
+            }
+        }
+
+        stage('Push the Docker Image to DockerHub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'docker_hub', variable: 'docker_hub')]) {
+                        sh "docker login -u ${DOCKER_USERNAME} -p ${docker_hub}"
+                    }
+                    sh "docker push ${DOCKER_IMAGE}:${env.COMMIT_HASH}"
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Setup Kubernetes context
+                    withCredentials([file(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG')]) {
+                        sh "kubectl --kubeconfig ${KUBECONFIG} set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${DOCKER_IMAGE}:${env.COMMIT_HASH} -n ${NAMESPACE}"
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished. You can manually trigger the Rollback stage if needed.'
+        }
+    }
+}
+
