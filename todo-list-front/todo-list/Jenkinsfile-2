@@ -1,0 +1,32 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = 'enginedevops/react-jenkins'
+        K8S_DEPLOYMENT_NAME = 'react-front' // Kubernetes deployment name
+        NAMESPACE = 'prod'
+    }
+
+    stages {
+        stage('Rollback') {
+            steps {
+                script {
+                    // ورودی برای دریافت تأیید از کاربر
+                    def proceed = input(message: 'Do you want to proceed with Rollback?', ok: 'Yes', parameters: [string(name: 'Commit Hash', defaultValue: '', description: 'Enter the commit hash to rollback to')])
+
+                    echo "Rolling back Deployment to image tag: ${proceed}"
+
+                    withCredentials([file(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG')]) {
+                        sh "kubectl --kubeconfig ${KUBECONFIG} set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${DOCKER_IMAGE}:${proceed} -n ${NAMESPACE}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Rollback Pipeline finished.'
+        }
+    }
+}
