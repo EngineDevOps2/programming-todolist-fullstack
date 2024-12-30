@@ -1,0 +1,35 @@
+version: '3'  
+#########
+services:  
+  db:  
+    image: postgres:latest 
+    restart: always  
+    environment:  
+      POSTGRES_USER: leyla  
+      POSTGRES_PASSWORD: 123456 
+      POSTGRES_DB: todolist 
+    volumes:  
+      - postgres_data:/var/lib/postgresql/data  
+    ports:  
+      - "5432:5432"  
+
+  backend:  
+    build:  
+      context: .
+    ports:  
+      - "8080:8080"  
+    environment:  
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/todolist 
+      SPRING_DATASOURCE_USERNAME: leyla  
+      SPRING_DATASOURCE_PASSWORD: 123456
+    depends_on:  
+      - db  
+
+  frontend:  
+    build:  
+      context: ../../todo-list-front/todo-list
+    ports:  
+      - "3000:3000"  
+
+volumes:  
+  postgres_data:

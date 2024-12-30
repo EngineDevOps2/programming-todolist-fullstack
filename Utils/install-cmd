@@ -1,0 +1,46 @@
+###### install jenkins 
+
+sudo wget -O /usr/share/keyrings/jenkins-keyring.asc https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+apt-get update && apt-get upgrade -y
+sudo apt update
+sudo apt install fontconfig openjdk-17-jre
+
+#### install k3s 
+curl -sfL https://get.k3s.io | sh -
+curl -sfL https://get.k3s.io | sh -s -- --tls-san 34.42.107.218
+
+#### add github
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+
+git add *
+git commit -m 'add files'
+git push origin main
+
+
+#### deploy kubernetes
+
++ kubectl --kubeconfig **** set image deployment/react-front react-front=enginedevops/react-jenkins:12 -n prod
+kubectl --kubeconfig ${KUBECONFIG} set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${DOCKER_IMAGE}:${env.BUILD_ID}   -n ${NAMESPACE}
+
+
+##### install ingress nginx helm chart
+
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+https://artifacthub.io/packages/helm/ingress-nginx/ingress-nginx
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
+
+#### Add Secret ingress nginx in kubernetes
+
+
+kubectl create secret tls my-tls-secret --cert=my-cert.crt --key=my-key.key 
+
+kubectl create secret tls cloudflare-ssl --cert=cloudflare-csr.crt  --key=cloudflare-key.key -n prod

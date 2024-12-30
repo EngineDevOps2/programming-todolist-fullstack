@@ -1,0 +1,124 @@
+pipeline {  
+    agent any  
+
+    environment {  
+        DOCKER_IMAGE = 'enginedevops/java-spring-21-jenkins'  
+        K8S_DEPLOYMENT_NAME = 'java-spring' // Kubernetes deployment name  
+        NAMESPACE = 'prod'  
+        DOCKER_USERNAME = 'enginedevops'  
+        DOCKER_PASSWORD = 'xxxxxxxxxxxx'  
+        def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()  
+        POSTGRES_CONTAINER_NAME = 'db'  
+        POSTGRES_USER = 'leyla'  
+        POSTGRES_PASSWORD = '123456'  
+        POSTGRES_DB = 'todolist' // Change as needed  
+    }  
+
+    stages {  
+        stage('Checkout GitHub repo') {  
+            steps {  
+                cleanWs()  
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/EngineDevOps2/programming-java-spring-react.git']])  
+            }  
+        }  
+
+        stage('Start PostgreSQL and Run Migrations') {  
+        //  agent {
+        //     docker { 
+        //         image 'amd64/gradle:8.11-jdk21' 
+        //           }
+        //          }
+            steps {  
+                script {  
+                    // Start PostgreSQL container  
+                    sh '''  
+                    docker run --name ${POSTGRES_CONTAINER_NAME} \
+                    -e POSTGRES_USER=${POSTGRES_USER} \
+                    -e POSTGRES_PASSWORD=${POSTGRES_PASSWORD} \
+                    -e POSTGRES_DB=${POSTGRES_DB} \
+                    -d -p 5432:5432 postgres:latest  
+                    '''  
+
+                    // Run Gradle in a Docker container and generate JOOQ  
+                     sh ''' 
+                     cd todo-list-backend-java-21/todolist
+                    /usr/local/bin/gradle-8.11.1/bin/gradle flywayMigrate generateJooq --no-daemon 
+                    gradle shadowJar --no-daemon 
+
+                    '''  
+                }  
+            }  
+        }  
+
+        stage('Archive Artifacts') {  
+            steps {  
+                script {  
+                    // Archive the generated build artifacts, adjust the path as needed  
+                    archiveArtifacts artifacts: 'todo-list-backend-java-21/todolist/build/', fingerprint: true  
+                }  
+            }  
+        }  
+
+        stage('Build and Tag Docker Image') {  
+            steps {  
+                script {  
+                    sh "docker build -t ${DOCKER_IMAGE}:${commitHash} todo-list-backend-java-21/todolist/"  
+                }  
+            }  
+        }  
+
+        stage('Push the Docker Image to DockerHub') {  
+            steps {  
+                script {  
+                    withCredentials([string(credentialsId: 'docker_hub', variable: 'docker_hub')]) {  
+                        sh 'docker login -u enginedevops -p ${docker_hub}'  
+                    }  
+                    sh "docker push ${DOCKER_IMAGE}:${commitHash}"  
+                }  
+            }  
+        }  
+
+        stage('Deploy to Kubernetes') {  
+            steps {  
+                script {  
+                    withCredentials([file(credentialsId: 'KUBECONFIG', variable: 'KUBECONFIG')]) {  
+                        sh "kubectl --kubeconfig ${KUBECONFIG} set image deployment/${K8S_DEPLOYMENT_NAME} ${K8S_DEPLOYMENT_NAME}=${DOCKER_IMAGE}:${commitHash} -n ${NAMESPACE}"  
+                    }  
+                }  
+            }  
+        } 
+        
+        
+            ///Rollback
+    
+        //     stage('Rollback') {  
+        //     steps {  
+        //         script {  
+        //             echo 'Rolling back Deployment...'  
+        //             // Rollback to the previous version in Kubernetes  
+        //             input message: 'Proceed to Rollback Deployment?'  
+        //             sh '''  
+        //             kubectl rollout undo ${KUBE_DEPLOYMENT} -n ${KUBE_PROD_NAMESPACE} \
+        //             --to-revision=$(kubectl rollout history ${KUBE_DEPLOYMENT} -n ${KUBE_PROD_NAMESPACE} | grep -w ${env.GIT_COMMIT.take(7)} | awk '{print $1}' | head -n1)  
+        //             '''  
+        //         }  
+        //     }  
+        // }  
+    }  
+    
+
+    
+    
+    post {   
+        success {   
+            echo "BUILD Successful ........... ${commitHash}"  
+        }  
+        // Cleanup PostgreSQL container if needed  
+        cleanup {  
+            sh '''  
+            docker stop ${POSTGRES_CONTAINER_NAME} || true  
+            docker rm ${POSTGRES_CONTAINER_NAME} || true  
+            '''  
+        }  
+    }  
+}
