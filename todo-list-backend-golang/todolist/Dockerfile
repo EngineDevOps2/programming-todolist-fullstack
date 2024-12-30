@@ -1,4 +1,4 @@
-# Use the official Golang image as a base  
+# ###Use the official Golang image as a base  
 FROM golang:1.22 AS builder  
 
 # Set the Current Working Directory inside the container  
@@ -23,7 +23,7 @@ FROM alpine:latest
 WORKDIR /app  
 
 # Copy the Pre-built binary file from the previous stage  
-COPY --from=builder /app/todolist .  
+COPY --from=builder /app/todolist ./ 
 
 # Expose the port the app runs on  
 EXPOSE 8000 
