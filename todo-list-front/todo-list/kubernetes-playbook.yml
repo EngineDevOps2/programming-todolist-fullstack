@@ -1,0 +1,11 @@
+---
+- name: Update Kubernetes Deployment
+  hosts: master 
+  tasks:
+    - name: Set image for deployment
+      command: kubectl set image deployment/react-front react-front=enginedevops/react-jenkins:0d92713  -n prod
+      register: result
+
+    - name: Print result
+      debug:
+        var: result.stdout
