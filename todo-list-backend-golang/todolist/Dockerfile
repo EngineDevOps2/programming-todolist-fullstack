@@ -20,7 +20,7 @@ RUN go build -o todolist
 FROM alpine:latest  
 
 # Set the Current Working Directory inside the container  
-WORKDIR /app/  
+WORKDIR /app  
 
 # Copy the Pre-built binary file from the previous stage  
 COPY --from=builder /app/todolist .  
@@ -29,4 +29,4 @@ COPY --from=builder /app/todolist .
 EXPOSE 8000 
 
 # Command to run the executable  
-CMD ["./todolist"]
+CMD ["/app/todolist"]
