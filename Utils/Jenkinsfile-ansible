@@ -1,0 +1,77 @@
+pipeline {
+    agent any
+    
+    environment {
+        DOCKER_IMAGE = 'enginedevops/react-jenkins'
+        K8S_DEPLOYMENT_NAME = 'react-front' // Kubernetes deployment name
+        NAMESPACE = 'prod'
+        DOCKER_USERNAME = 'enginedevops'
+        DOCKER_PASSWORD = 'xxxxxxxxxxxx'
+        def commitHash = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+    }
+
+    stages {
+        stage('Checkout GitHub repo') {
+            steps {
+                cleanWs()
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/EngineDevOps2/programming-java-spring-react.git']])
+            }
+        }
+        
+        // stage('Get Commit Hash') {
+        //     steps {
+        //         script {
+        //             // دریافت commit hash
+        //             env.COMMIT_HASH = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        //         }
+        //     }
+        // }
+
+        stage('Build and Tag Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE}:${commitHash} todo-list-front/todo-list"
+                }
+            }
+        }
+
+        stage('Push the Docker Image to DockerHub') {
+            steps {
+                script {
+                    withCredentials([string(credentialsId: 'docker_hub', variable: 'docker_hub')]) {
+                        sh "docker login -u ${DOCKER_USERNAME} -p ${docker_hub}"
+                    }
+                    sh "docker push ${DOCKER_IMAGE}:${commitHash}"
+                }
+            }
+        }
+
+  stage('Deploy to Kubernetes via Ansible') {
+            steps {
+                script {
+                    // Run Ansible command on remote server
+                    sh 'ssh root@x.x.x.x ansible-playbook -e HASH_COMMIT=${commitHash} -i /home/leyla/prod/inventory.yaml /home/leyla/prod/kubernetes-playbook.yml'
+                    // sshPublisher(publishers: [sshPublisherDesc(
+                    //     configName: 'x.x.x.x',
+                    //     transfers: [sshTransfer(
+                    //         sourceFiles: '',
+                    //         remoteDirectory: '',
+                    //         execCommand: 'ansible-playbook -i /home/leyla/prod/inventory.yaml /home/leyla/prod/kubernetes-playbook.yml'
+                    //     )],
+                    //     usePromotionTimestamp: false,
+                    //     useWorkspaceInPromotion: false,
+                    //     verbose: true
+                    // )])
+                }
+            }
+        }
+
+
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished......................'
+        }
+    }
+}
