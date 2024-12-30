@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: php-laravel
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: php-laravel
+  template:
+    metadata:
+      labels:
+        app: php-laravel
+    spec:
+      containers:
+        - name: php-laravel
+          image: 587719063165.dkr.ecr.us-west-2.amazonaws.com/php-laravel:23a3bbc3
+          imagePullPolicy: "Always"
+          ports:
+          - name: http
+            containerPort: 8000
+            protocol: TCP
+#          livenessProbe:
+#            periodSeconds: 10
+#            initialDelaySeconds: 15
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#          readinessProbe:
+#            periodSeconds: 10
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#            initialDelaySeconds: 15
+          envFrom:
+            - configMapRef:
+                name: php-config
+#          volumeMounts:
+#            - mountPath: /home/app/api/media
+#              name: php-laravel-media
+#      volumes:
+#        - name: php-laravel-media
+#          hostPath:
+#            path: /home/leyla/media-php-laravel-worker-2
+
