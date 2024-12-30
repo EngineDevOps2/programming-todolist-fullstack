@@ -14,7 +14,7 @@ RUN go mod tidy
 COPY . .  
 
 # Build the Go app  
-RUN go build -o todolist  
+RUN GOOS=linux GOARCH=amd64 go build -o todolist && chmod +x todolist  
 
 # Start a new stage from scratch  
 FROM alpine:latest  
@@ -23,7 +23,7 @@ FROM alpine:latest
 WORKDIR /app  
 
 # Copy the Pre-built binary file from the previous stage  
-COPY --from=builder /app/todolist ./ 
+COPY --from=builder /app/todolist /app/
 
 # Expose the port the app runs on  
 EXPOSE 8000 
