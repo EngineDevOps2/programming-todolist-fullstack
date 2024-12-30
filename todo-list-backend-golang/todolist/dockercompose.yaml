@@ -1,0 +1,24 @@
+version: '3'  
+
+services:  
+  api:
+    build: 
+     dockerfile: ./Dockerfile
+#   image: 
+    ports:
+     - 8000:8000
+  db:  
+    image: postgres:latest  
+    restart: always  
+    environment:  
+      POSTGRES_USER: leyla
+      POSTGRES_PASSWORD: 123456  
+      POSTGRES_DB: todolist4 
+
+
+    volumes:  
+      - postgres_data4:/var/lib/postgresql/data/  
+
+volumes:  
+  postgres_data4:  
+

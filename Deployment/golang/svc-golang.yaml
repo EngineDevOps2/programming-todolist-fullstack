@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: golang-gin
+  namespace: prod
+  labels:
+    app: golang-gin
+spec:
+  type: ClusterIP
+  ports:
+   - port: 8000
+  selector:
+   app: golang-gin

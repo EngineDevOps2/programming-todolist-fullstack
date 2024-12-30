@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: golang-config
+  namespace: prod
+  labels:
+    app: golang-gin
+data:
+  host: "db" 
+  port: "5432"  
+  dbname: "todolist4"
+  user: "leyla"  
+  password: "123456"  
+  sslmode: "disable"

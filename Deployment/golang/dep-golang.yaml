@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: golang-gin
+  namespace: prod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: golang-gin
+  template:
+    metadata:
+      labels:
+        app: golang-gin
+    spec:
+      containers:
+        - name: golang-gin
+          image: 587719063165.dkr.ecr.us-west-2.amazonaws.com/golang-gin:23a3bbc3
+          imagePullPolicy: "Always"
+          ports:
+          - name: http
+            containerPort: 8000
+            protocol: TCP
+#          livenessProbe:
+#            periodSeconds: 10
+#            initialDelaySeconds: 15
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#          readinessProbe:
+#            periodSeconds: 10
+#            httpGet:
+#              path: /api/ping
+#              port: http
+#            initialDelaySeconds: 15
+          envFrom:
+            - configMapRef:
+                name: golang-config
+#          volumeMounts:
+#            - mountPath: /home/app/api/media
+#              name: golang-gin-media
+#      volumes:
+#        - name: golang-gin-media
+#          hostPath:
+#            path: /home/leyla/media-golang-gin-worker-2
+
