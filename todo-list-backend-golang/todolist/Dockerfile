@@ -1,4 +1,4 @@
-# ##Use the official Golang image as a base  
+# Use the official Golang image as a base  
 FROM golang:1.22 AS builder  
 
 # Set the Current Working Directory inside the container  
@@ -13,8 +13,8 @@ RUN go mod tidy
 # Copy the source code into the container  
 COPY . .  
 
-# Build the Go app  
-RUN GOOS=linux GOARCH=amd64 go build -o todolist && chmod +x todolist  
+# Build the Go app with static linking  
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o todolist  
 
 # Start a new stage from scratch  
 FROM alpine:latest  
@@ -23,7 +23,10 @@ FROM alpine:latest
 WORKDIR /app  
 
 # Copy the Pre-built binary file from the previous stage  
-COPY --from=builder /app/todolist /app/
+COPY --from=builder /app/todolist ./ 
+
+# Ensure the binary is executable  
+RUN chmod +x /app/todolist
 
 # Expose the port the app runs on  
 EXPOSE 8000 
